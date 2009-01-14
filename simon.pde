@@ -4,7 +4,7 @@
   Copyright (c) 2009 Barry Ezell  
 ===================================================*/
 
-#define MAX 12          //user will win when successfully repeating MAX sequences.  
+#define MAX 10          //user will win when successfully repeating MAX sequences.  
 #define LED_1 7
 #define LED_2 8
 #define LED_3 10
@@ -109,13 +109,9 @@ void goUser() {
     buttonTmp=-1;    
     delay(200);
     
-    if (!checkSequence(userPos)) {
-      signalLoss();
-      return; 
-    }
-   
-    //if user has clicked "cur" buttons, either notify them of win or go to next turn
-    if (userPos == curPos) {
+    if (!checkSequence(userPos)) {     
+      signalLoss();      
+    } else if (userPos == curPos) {
       if (userPos == MAX-1) {
         signalWin();
       } else {
@@ -123,12 +119,12 @@ void goUser() {
         curPos+=1;
         state=SIMON;          
       }
-    }
-  }
+    }//check sequence correct
+  }//if button just released
 }
 
 boolean checkSequence(int userPos) {
-  for(int i=0; i<userPos; i++) {
+  for(int i=0; i<=userPos; i++) {
     if (seq[i] != userSeq[i]) return false;
   }
   return true;
