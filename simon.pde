@@ -36,6 +36,7 @@ int leds[]={ LED_1,LED_2,LED_3,LED_4 };
 int tones[]={ C1,E1,G1,C2 };  //each led/button/tone is related by index
 int state = NEW;
 int buttonTmp=-1;
+boolean won=false;          //records whether user won for use in end-state blinking
 
 void setup() { 
   pinMode(SPEAKER,OUTPUT);
@@ -63,6 +64,7 @@ void loop() {
       makeGame();
       break;
     case END:
+      signalEnd();
       break;
   }
 }
@@ -144,7 +146,21 @@ void playTone(int tone, long duration) {
     // Keep track of how long we pulsed
     elapsed_time += (tone);
   }
-} 
+}
+
+void signalEnd() {
+  //note: signalLoss() or signalWin() will always preceed this
+  int led = 0;
+  if (won) {
+    led = LED_4;
+  } else {
+    led = LED_1;
+  }
+  digitalWrite(led,HIGH);
+  delay(700);
+  digitalWrite(led,LOW);
+  delay(700);
+}
 
 void signalLoss() {
   playTone(6000,120000); 
@@ -159,6 +175,7 @@ void signalWin() {
   playTone(C2,120000);
   delay(20);
   playTone(C2,120000);
+  won=true;
   state=END;
 }
 
